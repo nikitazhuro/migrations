@@ -1,0 +1,27 @@
+{
+  "name": "ar-migration",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "migration:new": "ts-node ./lib/startup/create.ts",
+    "migration:run": "ts-node ./lib/startup/run.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/mongodb": "^4.0.7",
+    "@types/node": "^22.8.1",
+    "mongodb": "^6.10.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@types/commander": "^2.12.5",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "hasha": "^6.0.0",
+    "ora": "^5.0.0"
+  }
+}
