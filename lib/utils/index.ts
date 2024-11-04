@@ -2,13 +2,8 @@ import { Db } from 'mongodb';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { MigrationObject } from '../types';
+import { IChangelog, MigrationObject, IChangelogData } from '../types';
 
-interface IChangelogSchema {
-  createdAt: Date;
-  fileName: String;
-  status: String;
-}
 
 export const getMigrationsDir = () => {
   return path.join(__dirname, '..', '..', 'migrations');
@@ -25,7 +20,7 @@ export const loadMigrationFile = async (
 };
 
 
-export const updateChangelog = async (db: Db, changelogData: IChangelogSchema): Promise<void> => {
+export const updateChangelog = async (db: Db, changelogData: IChangelogData): Promise<void> => {
   if (!process.env.CHANGELOG_COLLECTION_NAME) return;
 
   try {
@@ -61,9 +56,9 @@ export const checkIfMigrationApplied = async (db: Db, filenames: string[]): Prom
   for (let i = 0; i < filenames.length; i++) {
     const fileName = filenames[i];
 
-    const isLogsExist = await db.collection(process.env.CHANGELOG_COLLECTION_NAME).findOne({ fileName });
+    const isLogsExist = await db.collection(process.env.CHANGELOG_COLLECTION_NAME).findOne({ fileName }) as IChangelog;
 
-    if (isLogsExist?.status !== 'APPLIED') {
+    if (isLogsExist.status !== 'APPLIED') {
       result.push(fileName);
     }
   }
@@ -78,7 +73,7 @@ export const getLastAppliedMigrationFilename = async (db: Db): Promise<string | 
     .findOne(
       { status: 'APPLIED' },
       { sort: { _id: -1 } },
-    );
+    ) as IChangelog;
 
   if (!lastAppliedMigration) return '';
 
