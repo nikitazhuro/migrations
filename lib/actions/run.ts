@@ -1,25 +1,9 @@
-import * as fs from 'fs';
 import * as path from 'path';
 import ora from 'ora';
 import { Db, MongoClient } from 'mongodb';
 
 import { connect } from '../env/database';
-import { checkIfMigrationApplied, getMigrationsDir, getMigrationsFileNames, updateChangelog } from '../utils';
-
-interface MigrationObject {
-  up(db: Db, client: MongoClient): Promise<void | never>;
-  down(db: Db, client: MongoClient): Promise<void | never>;
-}
-
-const loadMigrationFile = async (
-  filePath: string
-): Promise<MigrationObject> => {
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`File ${filePath} not exists.`);
-  }
-
-  return (await import(path.resolve(filePath))).default;
-};
+import { checkIfMigrationApplied, getMigrationsDir, getMigrationsFileNames, loadMigrationFile, updateChangelog } from '../utils';
 
 export const run = async () => {
   let client: MongoClient;
